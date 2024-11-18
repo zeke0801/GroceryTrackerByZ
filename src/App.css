@@ -63,6 +63,7 @@ body.light {
 
 .app-container {
   padding-top: 1rem;
+  padding-bottom: 4rem;
 }
 
 .theme-toggle {
@@ -986,7 +987,6 @@ input:checked + .slider:before {
 
 .export-btn {
   margin-top: 0.5rem;
-  background: var(--orange);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -997,31 +997,31 @@ input:checked + .slider:before {
   transition: opacity 0.2s;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
+  width: 100%;
+}
+
+.export-btn:first-of-type {
+  background: #ff9f0a;
+}
+
+.export-btn:last-of-type {
+  background: none;
+  color: var(--text);
+  opacity: 0.8;
 }
 
 .export-btn:active {
   opacity: 0.8;
 }
 
-.dark .export-btn {
+.dark .export-btn:first-of-type {
   background: #ff9f0a;
-  color: white;
 }
 
-.light .export-btn {
+.light .export-btn:first-of-type {
   background: #ff9f0a;
-  color: white;
-}
-
-.export-btn svg {
-  width: 1rem;
-  height: 1rem;
-}
-
-.export-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .total-expenses {
@@ -1258,6 +1258,74 @@ input {
   background: var(--button-bg);
 }
 
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: var(--background);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  text-align: center;
+  width: 80%;
+  max-width: 320px;
+}
+
+.modal p {
+  margin-bottom: 1.5rem;
+  color: var(--text);
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.modal-buttons button {
+  flex: 1;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.modal-buttons button:first-child {
+  background: var(--background);
+  border: 1px solid var(--border-color);
+  color: var(--text);
+}
+
+.modal-buttons button.delete-btn {
+  background: #ff3b30;
+  color: white;
+}
+
+.modal-buttons button:active {
+  opacity: 0.8;
+}
+
+.dark .modal {
+  background: #1c1c1e;
+  border: 1px solid #38383a;
+}
+
+.light .modal {
+  background: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
 .delete-modal-overlay {
   position: fixed;
   top: 0;
@@ -1327,10 +1395,24 @@ input {
 }
 
 .app-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   text-align: center;
   padding: 1rem;
-  margin-top: 1rem;
   color: var(--text);
   font-size: 0.9rem;
   opacity: 0.8;
+  background: var(--background);
+  border-top: 1px solid var(--border-color);
+}
+
+.header {
+  position: relative;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
 }

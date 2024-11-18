@@ -3,13 +3,20 @@ import './App.css';
 import { FiMoon, FiSun, FiTrash2, FiDownload } from 'react-icons/fi';
 import { jsPDF } from 'jspdf';
 import { QRCodeSVG } from 'qrcode.react';
+import { MdRefresh } from 'react-icons/md';
 
 function App() {
-  const [darkMode, setDarkMode] = React.useState(true);
-  const [expenses, setExpenses] = React.useState([]);
+  const [darkMode, setDarkMode] = React.useState(
+    localStorage.getItem('darkMode') === 'true'
+  );
+  const [expenses, setExpenses] = React.useState(() => {
+    const savedExpenses = localStorage.getItem('expenses');
+    return savedExpenses ? JSON.parse(savedExpenses) : [];
+  });
   const [currentAmount, setCurrentAmount] = React.useState('0');
   const [showQR, setShowQR] = React.useState(false);
   const [deleteItemId, setDeleteItemId] = React.useState(null);
+  const [showResetConfirm, setShowResetConfirm] = React.useState(false);
 
   const toggleQR = () => {
     setShowQR(!showQR);
@@ -56,6 +63,25 @@ function App() {
     document.body.className = newTheme;
     document.documentElement.style.backgroundColor = newTheme === 'dark' ? '#000000' : '#ffffff';
   };
+
+  const handleReset = () => {
+    setShowResetConfirm(true);
+  };
+
+  const confirmReset = () => {
+    setExpenses([]);
+    setShowResetConfirm(false);
+  };
+
+  React.useEffect(() => {
+    localStorage.setItem('expenses', JSON.stringify(expenses));
+  }, [expenses]);
+
+  React.useEffect(() => {
+    localStorage.setItem('darkMode', darkMode);
+    document.documentElement.style.backgroundColor = darkMode ? '#000000' : '#ffffff';
+    document.body.className = darkMode ? 'dark' : 'light';
+  }, [darkMode]);
 
   React.useEffect(() => {
     // Set initial background color
@@ -125,16 +151,28 @@ function App() {
           onAddExpense={addExpense}
           onDeleteExpense={handleDeleteClick}
           totalExpenses={getTotalExpenses()}
+          onReset={handleReset}
         />
       </div>
       <footer className="app-footer">
         Made By Zeke B. 2024
       </footer>
+      {showResetConfirm && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <p>Are you sure you want to remove all items?</p>
+            <div className="modal-buttons">
+              <button onClick={() => setShowResetConfirm(false)}>Cancel</button>
+              <button onClick={confirmReset} className="delete-btn">Reset All</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
-const ExpenseTracker = ({ expenses, currentAmount, onAddExpense, onDeleteExpense, totalExpenses }) => {
+const ExpenseTracker = ({ expenses, currentAmount, onAddExpense, onDeleteExpense, totalExpenses, onReset }) => {
   const [itemName, setItemName] = React.useState('');
   const [price, setPrice] = React.useState('');
   const [amount, setAmount] = React.useState('1');
@@ -303,6 +341,9 @@ const ExpenseTracker = ({ expenses, currentAmount, onAddExpense, onDeleteExpense
           <FiDownload />
           <span>Export</span>
         </button>
+      <button className="export-btn" onClick={onReset}>
+        Reset List
+      </button>
     </div>
   );
 };
