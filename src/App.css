@@ -892,7 +892,6 @@ input:checked + .slider:before {
 .expense-grand-total {
   margin-top: 1rem;
   padding: 1rem;
-  background: var(--button-bg);
   border-radius: 0.5rem;
   font-weight: bold;
   text-align: right;
@@ -901,10 +900,6 @@ input:checked + .slider:before {
 }
 
 .dark .expense-item {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.dark .expense-grand-total {
   background: rgba(255, 255, 255, 0.1);
 }
 
@@ -990,6 +985,7 @@ input:checked + .slider:before {
 }
 
 .export-btn {
+  margin-top: 0.5rem;
   background: var(--orange);
   color: white;
   border: none;
@@ -1009,7 +1005,7 @@ input:checked + .slider:before {
 }
 
 .dark .export-btn {
-  background: var(--orange);
+  background: #ff9f0a;
   color: white;
 }
 
