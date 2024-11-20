@@ -228,7 +228,7 @@ const ExpenseTracker = ({ expenses, currentAmount, onAddExpense, onDeleteExpense
     
     // Add title
     doc.setFontSize(20);
-    doc.text('Grocery Report', pageWidth/2, 20, { align: 'center' });
+    doc.text('Expense Report', pageWidth/2, 20, { align: 'center' });
     
     // Add date
     doc.setFontSize(12);
@@ -275,13 +275,13 @@ const ExpenseTracker = ({ expenses, currentAmount, onAddExpense, onDeleteExpense
     doc.text(`Total Expenses: ₱${totalExpenses}`, pageWidth - (margin + 15), y, { align: 'right' });
     
     // Save the PDF
-    doc.save('grocery-report.pdf');
+    doc.save('expense-report.pdf');
   };
 
   return (
     <div className="note-taker">
       <div className="tracker-header">
-        <h2>Grocery Tracker</h2>
+        <h2>Expense Tracker</h2>
 
       </div>
       <form onSubmit={handleAddExpense}>
@@ -378,6 +378,8 @@ const ExpenseTracker = ({ expenses, currentAmount, onAddExpense, onDeleteExpense
           <div className="budget-edit">
             <input
               type="number"
+              inputMode="decimal"
+              pattern="[0-9]*"
               value={tempBudget}
               onChange={(e) => setTempBudget(e.target.value)}
               onBlur={handleBudgetSubmit}
@@ -385,12 +387,12 @@ const ExpenseTracker = ({ expenses, currentAmount, onAddExpense, onDeleteExpense
               className="budget-input"
               autoFocus
               min="0"
-              step="0.01"
+              step="any"
             />
           </div>
         ) : (
           <div className="budget-display" onClick={handleBudgetClick}>
-            Budget: ₱{budget.toFixed(2)}
+            {budget > 0 ? `Budget: ₱${budget.toFixed(2)}` : 'Click to set limit'}
           </div>
         )}
         <div className={`budget-status ${parseFloat(totalExpenses) > budget ? 'over-budget' : ''}`}>

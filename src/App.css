@@ -960,7 +960,7 @@ input:checked + .slider:before {
 }
 
 .expense-grand-total {
-  margin-top: 0rem;
+  margin-top: .5rem;
   padding: 0rem;
   border-radius: 0.5rem;
   font-weight: bold;
@@ -1407,6 +1407,7 @@ input {
 
 .app-footer {
   position: fixed;
+  margin-top: 2rem;
   bottom: 0;
   left: 0;
   right: 0;
@@ -1440,8 +1441,8 @@ input {
 }
 
 .budget-display {
-  font-size: 1.1rem;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 100;
   color: var(--text-color);
   cursor: pointer;
   padding: 0rem;
@@ -1449,6 +1450,12 @@ input {
   transition: background-color 0.2s;
   display: flex;
   justify-content: flex-end;
+}
+
+.budget-display:empty::before {
+  content: 'Click to set limit';
+  color: var(--text-secondary);
+  font-style: italic;
 }
 
 .budget-display:hover {
@@ -1487,6 +1494,8 @@ input {
   font-size: 0.9rem;
   color: #34c759;
   font-weight: 500;
+  margin-top: .5rem;
+  margin-bottom: .5rem;
 }
 
 .budget-status.over-budget {
