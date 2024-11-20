@@ -83,7 +83,7 @@ body.light {
 }
 
 .moon-icon, .sun-icon {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
 }
 
 .dark .moon-icon,
@@ -104,7 +104,7 @@ body.light {
   color: var(--text);
   background: none;
   border: none;
-  font-size: 1rem;
+  font-size: 0.9rem;
   cursor: pointer;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
@@ -175,7 +175,7 @@ body.light {
   background: var(--orange);
   border: none;
   color: white;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
   padding: 1rem 3rem;
@@ -202,7 +202,7 @@ body.light {
   .qr-close {
     bottom: 3rem;
     padding: 1rem 4rem;
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
   
   .qr-popup {
@@ -313,7 +313,7 @@ input:checked + .slider:before {
   text-align: right;
   padding: 0.5rem;
   margin-bottom: 0.75rem;
-  font-size: 2.25rem;
+  font-size: 2.15rem;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   min-height: 2.75rem;
   display: flex;
@@ -341,7 +341,7 @@ input:checked + .slider:before {
   border: none;
   border-radius: 50%;
   color: white;
-  font-size: 1.125rem;
+  font-size: 1.025rem;
   width: 100%;
   aspect-ratio: 1;
   padding: 0;
@@ -411,7 +411,7 @@ input:checked + .slider:before {
 
 .history-label {
   padding: 0.625rem;
-  font-size: 0.875rem;
+  font-size: 0.775rem;
   font-weight: 500;
   text-align: left;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -433,7 +433,7 @@ input:checked + .slider:before {
 
 .history-item {
   padding: 0.375rem 0;
-  font-size: 0.875rem;
+  font-size: 0.775rem;
   text-align: left;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
@@ -489,7 +489,7 @@ input:checked + .slider:before {
 
 .history-title {
   padding: 0.75rem 1rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 500;
   border-bottom: 1px solid;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -511,7 +511,7 @@ input:checked + .slider:before {
 
 .history-item {
   padding: 0.5rem 1rem;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   white-space: nowrap;
   overflow: hidden;
@@ -543,8 +543,10 @@ input:checked + .slider:before {
 
 /* Note Taker Styles */
 .note-taker {
-  margin-top: .5rem;
-  margin-bottom: .5rem;
+  margin-top: 3rem;
+  margin-bottom: 5.5rem;
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
   width: 100%;
   max-width: 600px;
   padding: 1rem;
@@ -568,7 +570,7 @@ input:checked + .slider:before {
 .note-taker h2 {
   margin-top: 0;
   margin-bottom: 1rem;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   color: #ff9f0a;
 }
@@ -579,7 +581,7 @@ input:checked + .slider:before {
   margin-bottom: 1rem;
   border: none;
   border-radius: 0.625rem;
-  font-size: 1rem;
+  font-size: 0.9rem;
   resize: none;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   height: 2.5rem;
@@ -611,7 +613,7 @@ input:checked + .slider:before {
   border: none;
   border-radius: 0.5rem;
   padding: 0.5rem 1rem;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   cursor: pointer;
   width: 100%;
   margin-bottom: 1rem;
@@ -661,7 +663,7 @@ input:checked + .slider:before {
 .note p {
   margin: 0;
   padding-right: 2rem;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   line-height: 1.4;
 }
 
@@ -674,7 +676,7 @@ input:checked + .slider:before {
   border: none;
   border-radius: 0.25rem;
   padding: 0.25rem 0.5rem;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -713,7 +715,7 @@ input:checked + .slider:before {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-size: calc(9px + 2vmin);
   color: white;
 }
 
@@ -768,7 +770,7 @@ input:checked + .slider:before {
   border-radius: 0.5rem;
   background: var(--button-bg);
   color: var(--text-color);
-  font-size: 1rem;
+  font-size: 0.9rem;
   outline: none;
   transition: background-color 0.3s ease;
   box-sizing: border-box;
@@ -871,11 +873,11 @@ input:checked + .slider:before {
 .add-expense-btn {
   width: 100%;
   padding: 0.75rem;
-  background: var(--yellow);
-  color: var(--dark-text);
+  background: #ff9f0a;
+  color: white;
   border: none;
   border-radius: 0.5rem;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: bold;
   cursor: pointer;
   transition: opacity 0.3s ease;
@@ -887,7 +889,74 @@ input:checked + .slider:before {
 }
 
 .dark .add-expense-btn {
-  background: #ffc60a;
+  background: #ff9f0a;
+}
+
+.export-btn {
+  margin-top: 0.5rem;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ff9f0a;
+}
+
+.export-btn:hover {
+  opacity: 0.9;
+}
+
+.dark .export-btn {
+  background: #ff9f0a;
+}
+
+.light .export-btn {
+  background: #ff9f0a;
+}
+
+.dark .export-btn:first-of-type {
+  background: #ff9f0a;
+}
+
+.light .export-btn:first-of-type {
+  background: #ff9f0a;
+}
+
+.reset-list-btn {
+  background: #232323;
+  width: 100%;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.reset-list-btn:hover {
+  opacity: 0.9;
+}
+
+.dark .reset-list-btn {
+  background: #1111113d;
+  color: rgb(221, 212, 212);
+}
+
+.light .reset-list-btn {
+  background: #f6f4f4b3;
+  color: #1c1c1ebe;
 }
 
 .expense-grand-total {
@@ -897,7 +966,7 @@ input:checked + .slider:before {
   font-weight: bold;
   text-align: right;
   color: var(--orange);
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 
 .dark .expense-item {
@@ -920,7 +989,7 @@ input:checked + .slider:before {
   border: none;
   background: none;
   color: var(--orange);
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   padding: 0.5rem;
   cursor: pointer;
   display: flex;
@@ -931,7 +1000,7 @@ input:checked + .slider:before {
 }
 
 .amount-btn:hover {
-  background: rgba(255, 159, 10, 0.1);
+  background: rgba(200, 9, 9, 0.1);
 }
 
 .dark .amount-btn:hover {
@@ -944,7 +1013,7 @@ input:checked + .slider:before {
   padding: 0.75rem 0;
   border: none;
   background: none;
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: var(--text-color);
 }
 
@@ -978,95 +1047,33 @@ input:checked + .slider:before {
 }
 
 .total-expenses {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 500;
   color: var(--text-color);
   text-align: right;
   margin: 0;
 }
 
-.export-btn {
-  margin-top: 0.5rem;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 1.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: opacity 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  width: 100%;
+.history-list {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 0.625rem;
 }
 
-.export-btn:first-of-type {
-  background: #ff9f0a;
+.dark .history-list {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.5rem;
 }
 
-.export-btn:last-of-type {
-  background: none;
-  color: var(--text);
-  opacity: 0.8;
-}
-
-.export-btn:active {
-  opacity: 0.8;
-}
-
-.dark .export-btn:first-of-type {
-  background: #ff9f0a;
-}
-
-.light .export-btn:first-of-type {
-  background: #ff9f0a;
-}
-
-.total-expenses {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--text-color);
-  margin-bottom: 1rem;
-  text-align: right;
-}
-
-.total-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.total-expenses {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--text-color);
-  text-align: right;
-}
-
-.amount-btn.minus-btn {
-  color: var(--text-color);
-  opacity: 0.6;
-}
-
-.amount-btn.minus-btn:hover {
-  opacity: 0.8;
-}
-
-:root {
-  --yellow: #ffd60a;
-}
-
-.dark {
-  --yellow: #ffc60a;
+.light .history-list {
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 0.5rem;
 }
 
 /* Responsive Styles */
 @media screen and (max-width: 768px) {
   .app-container {
-    padding: 1rem;
+    padding: 1rem 2rem 1rem 2rem;
     max-width: 100%;
   }
 
@@ -1101,13 +1108,13 @@ input:checked + .slider:before {
   .expense-item {
     grid-template-columns: 1fr 0.7fr 0.5fr 0.7fr 0.3fr;
     padding: 0.75rem;
-    font-size: 0.875rem;
+    font-size: 0.7125rem;
   }
 
   .expense-header {
     grid-template-columns: 1fr 0.7fr 0.5fr 0.7fr 0.3fr;
     padding: 0.75rem;
-    font-size: 0.875rem;
+    font-size: 0.7125rem;
   }
 
   .tracker-header {
@@ -1121,6 +1128,10 @@ input:checked + .slider:before {
     justify-content: center;
   }
 
+  .export-btn span{
+    margin-left: .5rem;
+  }
+
   .total-expenses {
     width: 100%;
     text-align: left;
@@ -1131,13 +1142,13 @@ input:checked + .slider:before {
 @media screen and (max-width: 480px) {
   .expense-item {
     grid-template-columns: 1fr 0.8fr 0.5fr 0.8fr 0.3fr;
-    font-size: 0.8125rem;
+    font-size: 0.7125rem;
     padding: 0.625rem;
   }
 
   .expense-header {
     grid-template-columns: 1fr 0.8fr 0.5fr 0.8fr 0.3fr;
-    font-size: 0.8125rem;
+    font-size: 0.7125rem;
     padding: 0.625rem;
   }
 
@@ -1146,7 +1157,7 @@ input:checked + .slider:before {
   .header-amount,
   .header-total,
   .header-actions {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
   }
 
   .amount-input-container {
@@ -1164,7 +1175,7 @@ input:checked + .slider:before {
   }
 
   h2 {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
   }
 }
 
@@ -1254,7 +1265,7 @@ input {
 /* Keep dark mode inputs without borders */
 .dark input,
 .dark .amount-input-container {
-  border: none;
+  border: 1px solid rgba(250, 250, 250, 0.049);
   background: var(--button-bg);
 }
 
@@ -1354,13 +1365,13 @@ input {
 .delete-modal h3 {
   color: var(--text);
   margin: 0 0 15px 0;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .delete-modal p {
   color: var(--text);
   margin: 0 0 20px 0;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   opacity: 0.8;
 }
 
@@ -1374,7 +1385,7 @@ input {
   padding: 8px 20px;
   border-radius: 20px;
   border: none;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
   transition: opacity 0.2s;
@@ -1402,7 +1413,7 @@ input {
   text-align: center;
   padding: 1rem;
   color: var(--text);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   opacity: 0.8;
   background: var(--background);
   border-top: 1px solid var(--border-color);

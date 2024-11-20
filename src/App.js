@@ -339,9 +339,9 @@ const ExpenseTracker = ({ expenses, currentAmount, onAddExpense, onDeleteExpense
       </div>
       <button onClick={generatePDF} className="export-btn" aria-label="Export to PDF">
           <FiDownload />
-          <span>Export</span>
+          <span>Save Report</span>
         </button>
-      <button className="export-btn" onClick={onReset}>
+      <button className="reset-list-btn" onClick={onReset}>
         Reset List
       </button>
     </div>
