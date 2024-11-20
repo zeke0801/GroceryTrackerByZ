@@ -960,8 +960,8 @@ input:checked + .slider:before {
 }
 
 .expense-grand-total {
-  margin-top: 1rem;
-  padding: 1rem;
+  margin-top: 0rem;
+  padding: 0rem;
   border-radius: 0.5rem;
   font-weight: bold;
   text-align: right;
@@ -1426,4 +1426,85 @@ input {
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--border-color);
+}
+
+.budget-section {
+  margin: 0rem 0;
+  padding-top: .5rem;
+  border-radius: 0.5rem;
+  background: var(--button-bg);
+  display: flex;
+  flex-direction: column;
+  gap: 0rem;
+  text-align: right;
+}
+
+.budget-display {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 0rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.budget-display:hover {
+  background: rgba(255, 159, 10, 0.1);
+}
+
+.budget-edit {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.budget-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text-color);
+  background: var(--background);
+  outline: none;
+  text-align: right;
+}
+
+.dark .budget-input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.light .budget-input {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.budget-status {
+  font-size: 0.9rem;
+  color: #34c759;
+  font-weight: 500;
+}
+
+.budget-status.over-budget {
+  color: #ff3b30;
+}
+
+.dark .budget-status.over-budget {
+  color: #ff453a;
+}
+
+.light .budget-status.over-budget {
+  color: #ff3b30;
+}
+
+.dark .budget-status {
+  color: #30d158;
+}
+
+.light .budget-status {
+  color: #34c759;
 }

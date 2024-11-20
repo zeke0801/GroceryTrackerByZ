@@ -13,6 +13,10 @@ function App() {
     const savedExpenses = localStorage.getItem('expenses');
     return savedExpenses ? JSON.parse(savedExpenses) : [];
   });
+  const [budget, setBudget] = React.useState(() => {
+    const savedBudget = localStorage.getItem('budget');
+    return savedBudget ? parseFloat(savedBudget) : 0;
+  });
   const [currentAmount, setCurrentAmount] = React.useState('0');
   const [showQR, setShowQR] = React.useState(false);
   const [deleteItemId, setDeleteItemId] = React.useState(null);
@@ -76,6 +80,10 @@ function App() {
   React.useEffect(() => {
     localStorage.setItem('expenses', JSON.stringify(expenses));
   }, [expenses]);
+
+  React.useEffect(() => {
+    localStorage.setItem('budget', budget.toString());
+  }, [budget]);
 
   React.useEffect(() => {
     localStorage.setItem('darkMode', darkMode);
@@ -152,10 +160,12 @@ function App() {
           onDeleteExpense={handleDeleteClick}
           totalExpenses={getTotalExpenses()}
           onReset={handleReset}
+          budget={budget}
+          onBudgetChange={setBudget}
         />
       </div>
       <footer className="app-footer">
-        Made By Zeke B. 2024
+        Made By Zeke B 2024
       </footer>
       {showResetConfirm && (
         <div className="modal-overlay">
@@ -172,10 +182,34 @@ function App() {
   );
 }
 
-const ExpenseTracker = ({ expenses, currentAmount, onAddExpense, onDeleteExpense, totalExpenses, onReset }) => {
+const ExpenseTracker = ({ expenses, currentAmount, onAddExpense, onDeleteExpense, totalExpenses, onReset, budget, onBudgetChange }) => {
   const [itemName, setItemName] = React.useState('');
   const [price, setPrice] = React.useState('');
   const [amount, setAmount] = React.useState('1');
+  const [isEditingBudget, setIsEditingBudget] = React.useState(false);
+  const [tempBudget, setTempBudget] = React.useState(budget.toString());
+
+  const handleBudgetClick = () => {
+    setIsEditingBudget(true);
+    setTempBudget(budget.toString());
+  };
+
+  const handleBudgetSubmit = () => {
+    const newBudget = parseFloat(tempBudget);
+    if (!isNaN(newBudget) && newBudget >= 0) {
+      onBudgetChange(newBudget);
+    }
+    setIsEditingBudget(false);
+  };
+
+  const handleBudgetKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleBudgetSubmit();
+    } else if (e.key === 'Escape') {
+      setIsEditingBudget(false);
+      setTempBudget(budget.toString());
+    }
+  };
 
   const handleAddExpense = (e) => {
     e.preventDefault();
@@ -334,9 +368,36 @@ const ExpenseTracker = ({ expenses, currentAmount, onAddExpense, onDeleteExpense
           </div>
         ))}
       </div>
+      
+
       <div className="expense-grand-total">
         Total Expenses: ₱{totalExpenses}
       </div>
+      <div className="budget-section">
+        {isEditingBudget ? (
+          <div className="budget-edit">
+            <input
+              type="number"
+              value={tempBudget}
+              onChange={(e) => setTempBudget(e.target.value)}
+              onBlur={handleBudgetSubmit}
+              onKeyDown={handleBudgetKeyPress}
+              className="budget-input"
+              autoFocus
+              min="0"
+              step="0.01"
+            />
+          </div>
+        ) : (
+          <div className="budget-display" onClick={handleBudgetClick}>
+            Budget: ₱{budget.toFixed(2)}
+          </div>
+        )}
+        <div className={`budget-status ${parseFloat(totalExpenses) > budget ? 'over-budget' : ''}`}>
+          {budget > 0 && `${((parseFloat(totalExpenses) / budget) * 100).toFixed(1)}% of budget`}
+        </div>
+      </div>
+
       <button onClick={generatePDF} className="export-btn" aria-label="Export to PDF">
           <FiDownload />
           <span>Save Report</span>
