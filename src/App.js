@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { FiMoon, FiSun, FiTrash2, FiDownload, FiList, FiPlus, FiCheck } from 'react-icons/fi';
+import { FiMoon, FiSun, FiTrash2, FiDownload, FiList, FiPlus, FiCheck, FiTrendingUp } from 'react-icons/fi';
 import { jsPDF } from 'jspdf';
 import { QRCodeSVG } from 'qrcode.react';
 
@@ -55,9 +55,42 @@ function App() {
   const [currentAmount, setCurrentAmount] = React.useState('0');
   const [showQR, setShowQR] = React.useState(false);
   const [showTrips, setShowTrips] = React.useState(false);
+  const [showTrajectory, setShowTrajectory] = React.useState(false);
   const [deleteItemId, setDeleteItemId] = React.useState(null);
   const [deleteTripId, setDeleteTripId] = React.useState(null);
   const [showResetConfirm, setShowResetConfirm] = React.useState(false);
+
+  const [trajectory, setTrajectory] = React.useState(() => {
+    try {
+      const raw = localStorage.getItem('trajectory');
+      const parsed = raw ? JSON.parse(raw) : null;
+      if (Array.isArray(parsed)) return parsed;
+    } catch (e) { /* fall through */ }
+    return [];
+  });
+
+  const addTrajectoryItem = ({ name, unitPrice, quantity }) => {
+    setTrajectory(prev => [...prev, {
+      id: Date.now(),
+      name: name || 'Item',
+      unitPrice,
+      quantity: parseInt(quantity) || 1,
+    }]);
+  };
+
+  const removeTrajectoryItem = (id) => {
+    setTrajectory(prev => prev.filter(i => i.id !== id));
+  };
+
+  const updateTrajectoryItemQty = (id, qty) => {
+    setTrajectory(prev => prev.map(i => (i.id === id ? { ...i, quantity: Math.max(1, qty) } : i)));
+  };
+
+  const clearTrajectory = () => setTrajectory([]);
+
+  React.useEffect(() => {
+    localStorage.setItem('trajectory', JSON.stringify(trajectory));
+  }, [trajectory]);
 
   const effectiveActiveTripId = React.useMemo(() => {
     if (activeTripId && trips.some(t => t.id === activeTripId)) return activeTripId;
@@ -70,13 +103,13 @@ function App() {
     setTrips(prev => prev.map(t => (t.id === activeTrip.id ? updater(t) : t)));
   };
 
-  const addExpense = (amount, details) => {
-    const [name, quantity] = details.split(',').map(s => s.trim());
+  const addExpense = ({ name, unitPrice, quantity }) => {
+    const qty = parseInt(quantity) || 1;
     const newItem = {
       id: Date.now(),
       name: name || 'Item',
-      quantity: quantity || '1',
-      amount: parseFloat(amount),
+      quantity: String(qty),
+      amount: unitPrice * qty,
       date: new Date().toLocaleDateString(),
       checked: false,
     };
@@ -188,6 +221,11 @@ function App() {
     return Array.from(seen.values()).sort((a, b) => b.lastSeen - a.lastSeen);
   }, [trips]);
 
+  const trajectoryTotal = React.useMemo(
+    () => trajectory.reduce((sum, i) => sum + i.unitPrice * i.quantity, 0),
+    [trajectory]
+  );
+
   return (
     <div className={`App ${darkMode ? 'dark' : 'light'}`}>
       {deleteItemId !== null && (
@@ -241,6 +279,11 @@ function App() {
             <FiList />
             <span>Trips</span>
           </button>
+
+          <button onClick={() => setShowTrajectory(true)} className="trajectory-toggle" aria-label="Trajectory">
+            <FiTrendingUp />
+            <span>Trajectory</span>
+          </button>
         </div>
 
         <div className="theme-toggle">
@@ -252,6 +295,20 @@ function App() {
           <FiSun className="sun-icon" />
         </div>
       </header>
+
+      {showTrajectory && (
+        <TrajectoryModal
+          trajectory={trajectory}
+          total={trajectoryTotal}
+          budget={activeTrip?.budget ?? 0}
+          itemHistory={itemHistory}
+          onAdd={addTrajectoryItem}
+          onRemove={removeTrajectoryItem}
+          onUpdateQty={updateTrajectoryItemQty}
+          onClear={clearTrajectory}
+          onClose={() => setShowTrajectory(false)}
+        />
+      )}
 
       {showTrips && (
         <div className="qr-overlay" onClick={() => setShowTrips(false)}>
@@ -335,14 +392,10 @@ function App() {
   );
 }
 
-const ExpenseTracker = ({ trip, currentAmount, onAddExpense, onDeleteExpense, onToggleChecked, totalExpenses, onReset, onBudgetChange, onRenameTrip, itemHistory = [] }) => {
+const ItemInputForm = ({ itemHistory = [], onSubmit, submitLabel = 'Record Item' }) => {
   const [itemName, setItemName] = React.useState('');
   const [price, setPrice] = React.useState('');
   const [amount, setAmount] = React.useState('1');
-  const [isEditingBudget, setIsEditingBudget] = React.useState(false);
-  const [tempBudget, setTempBudget] = React.useState(trip.budget.toString());
-  const [isEditingName, setIsEditingName] = React.useState(false);
-  const [tempName, setTempName] = React.useState(trip.name);
   const [showSuggestions, setShowSuggestions] = React.useState(false);
   const [selectedSuggestion, setSelectedSuggestion] = React.useState(-1);
 
@@ -363,6 +416,133 @@ const ExpenseTracker = ({ trip, currentAmount, onAddExpense, onDeleteExpense, on
     setShowSuggestions(false);
     setSelectedSuggestion(-1);
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!price || !itemName.trim()) return;
+    onSubmit({
+      name: itemName.trim(),
+      unitPrice: parseFloat(price),
+      quantity: parseInt(amount) || 1,
+    });
+    setItemName('');
+    setPrice('');
+    setAmount('1');
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="expense-input-grid">
+        <div className="item-input-wrapper">
+          <input
+            type="text"
+            value={itemName}
+            onChange={(e) => {
+              setItemName(e.target.value);
+              setShowSuggestions(true);
+              setSelectedSuggestion(-1);
+            }}
+            onFocus={() => { if (itemName.trim()) setShowSuggestions(true); }}
+            onBlur={() => setShowSuggestions(false)}
+            onKeyDown={(e) => {
+              if (!showSuggestions || suggestionMatches.length === 0) return;
+              if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setSelectedSuggestion(prev => Math.min(prev + 1, suggestionMatches.length - 1));
+              } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setSelectedSuggestion(prev => Math.max(prev - 1, -1));
+              } else if (e.key === 'Enter' && selectedSuggestion >= 0) {
+                e.preventDefault();
+                pickSuggestion(suggestionMatches[selectedSuggestion]);
+              } else if (e.key === 'Tab') {
+                e.preventDefault();
+                pickSuggestion(suggestionMatches[Math.max(0, selectedSuggestion)]);
+              } else if (e.key === 'Escape') {
+                setShowSuggestions(false);
+                setSelectedSuggestion(-1);
+              }
+            }}
+            placeholder="Item"
+            className="item-input"
+            autoComplete="off"
+          />
+          {showSuggestions && suggestionMatches.length > 0 && (
+            <ul className="suggestions-list" role="listbox">
+              {suggestionMatches.map((s, idx) => (
+                <li
+                  key={s.name}
+                  role="option"
+                  aria-selected={idx === selectedSuggestion}
+                  className={`suggestion-item ${idx === selectedSuggestion ? 'selected' : ''}`}
+                  onMouseDown={(e) => { e.preventDefault(); pickSuggestion(s); }}
+                  onMouseEnter={() => setSelectedSuggestion(idx)}
+                >
+                  <span className="suggestion-name">{s.name}</span>
+                  <span className="suggestion-price">₱{s.unitPrice.toFixed(2)}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <input
+          type="number"
+          inputMode="decimal"
+          pattern="[0-9]*"
+          value={price}
+          onChange={(e) => {
+            const value = e.target.value;
+            if (value === '' || /^\d*\.?\d{0,2}$/.test(value)) {
+              setPrice(value);
+            }
+          }}
+          onKeyDown={(e) => {
+            if (!/[\d.]/.test(e.key) &&
+                !['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+              e.preventDefault();
+            }
+          }}
+          placeholder="Price"
+          className="price-input"
+          step="0.01"
+          min="0"
+        />
+        <div className="amount-input-container">
+          <button
+            type="button"
+            className="amount-btn"
+            onClick={() => setAmount(Math.max(1, parseInt(amount) - 1).toString())}
+          >
+            −
+          </button>
+          <input
+            type="number"
+            value={amount}
+            onChange={(e) => setAmount(Math.max(1, parseInt(e.target.value) || 1).toString())}
+            placeholder="Amount"
+            className="amount-input"
+            min="1"
+            step="1"
+          />
+          <button
+            type="button"
+            className="amount-btn"
+            onClick={() => setAmount((parseInt(amount) + 1).toString())}
+          >
+            +
+          </button>
+        </div>
+      </div>
+      <button type="submit" className="add-expense-btn">{submitLabel}</button>
+    </form>
+  );
+};
+
+const ExpenseTracker = ({ trip, currentAmount, onAddExpense, onDeleteExpense, onToggleChecked, totalExpenses, onReset, onBudgetChange, onRenameTrip, itemHistory = [] }) => {
+  const [isEditingBudget, setIsEditingBudget] = React.useState(false);
+  const [tempBudget, setTempBudget] = React.useState(trip.budget.toString());
+  const [isEditingName, setIsEditingName] = React.useState(false);
+  const [tempName, setTempName] = React.useState(trip.name);
 
   const budget = trip.budget;
   const expenses = trip.items;
@@ -405,17 +585,6 @@ const ExpenseTracker = ({ trip, currentAmount, onAddExpense, onDeleteExpense, on
     } else if (e.key === 'Escape') {
       setIsEditingName(false);
       setTempName(trip.name);
-    }
-  };
-
-  const handleAddExpense = (e) => {
-    e.preventDefault();
-    if (price && itemName) {
-      const total = parseFloat(price) * parseFloat(amount || 1);
-      onAddExpense(total.toString(), `${itemName}, ${amount}`);
-      setItemName('');
-      setPrice('');
-      setAmount('1');
     }
   };
 
@@ -490,110 +659,7 @@ const ExpenseTracker = ({ trip, currentAmount, onAddExpense, onDeleteExpense, on
           </h2>
         )}
       </div>
-      <form onSubmit={handleAddExpense}>
-        <div className="expense-input-grid">
-          <div className="item-input-wrapper">
-            <input
-              type="text"
-              value={itemName}
-              onChange={(e) => {
-                setItemName(e.target.value);
-                setShowSuggestions(true);
-                setSelectedSuggestion(-1);
-              }}
-              onFocus={() => { if (itemName.trim()) setShowSuggestions(true); }}
-              onBlur={() => setShowSuggestions(false)}
-              onKeyDown={(e) => {
-                if (!showSuggestions || suggestionMatches.length === 0) return;
-                if (e.key === 'ArrowDown') {
-                  e.preventDefault();
-                  setSelectedSuggestion(prev => Math.min(prev + 1, suggestionMatches.length - 1));
-                } else if (e.key === 'ArrowUp') {
-                  e.preventDefault();
-                  setSelectedSuggestion(prev => Math.max(prev - 1, -1));
-                } else if (e.key === 'Enter' && selectedSuggestion >= 0) {
-                  e.preventDefault();
-                  pickSuggestion(suggestionMatches[selectedSuggestion]);
-                } else if (e.key === 'Tab') {
-                  e.preventDefault();
-                  pickSuggestion(suggestionMatches[Math.max(0, selectedSuggestion)]);
-                } else if (e.key === 'Escape') {
-                  setShowSuggestions(false);
-                  setSelectedSuggestion(-1);
-                }
-              }}
-              placeholder="Item"
-              className="item-input"
-              autoComplete="off"
-            />
-            {showSuggestions && suggestionMatches.length > 0 && (
-              <ul className="suggestions-list" role="listbox">
-                {suggestionMatches.map((s, idx) => (
-                  <li
-                    key={s.name}
-                    role="option"
-                    aria-selected={idx === selectedSuggestion}
-                    className={`suggestion-item ${idx === selectedSuggestion ? 'selected' : ''}`}
-                    onMouseDown={(e) => { e.preventDefault(); pickSuggestion(s); }}
-                    onMouseEnter={() => setSelectedSuggestion(idx)}
-                  >
-                    <span className="suggestion-name">{s.name}</span>
-                    <span className="suggestion-price">₱{s.unitPrice.toFixed(2)}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-          <input
-            type="number"
-            inputMode="decimal"
-            pattern="[0-9]*"
-            value={price}
-            onChange={(e) => {
-              const value = e.target.value;
-              if (value === '' || /^\d*\.?\d{0,2}$/.test(value)) {
-                setPrice(value);
-              }
-            }}
-            onKeyDown={(e) => {
-              if (!/[\d.]/.test(e.key) &&
-                  !['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
-                e.preventDefault();
-              }
-            }}
-            placeholder="Price"
-            className="price-input"
-            step="0.01"
-            min="0"
-          />
-          <div className="amount-input-container">
-            <button
-              type="button"
-              className="amount-btn"
-              onClick={() => setAmount(Math.max(1, parseInt(amount) - 1).toString())}
-            >
-              −
-            </button>
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(Math.max(1, parseInt(e.target.value) || 1).toString())}
-              placeholder="Amount"
-              className="amount-input"
-              min="1"
-              step="1"
-            />
-            <button
-              type="button"
-              className="amount-btn"
-              onClick={() => setAmount((parseInt(amount) + 1).toString())}
-            >
-              +
-            </button>
-          </div>
-        </div>
-        <button type="submit" className="add-expense-btn">Record Item</button>
-      </form>
+      <ItemInputForm itemHistory={itemHistory} onSubmit={onAddExpense} submitLabel="Record Item" />
       <div className="expense-header">
         <span className="header-item">Item</span>
         <span className="header-price">Price</span>
@@ -790,6 +856,86 @@ const Calculator = ({ onResult, currentAmount }) => {
             <div key={index} className="history-item">{item}</div>
           ))}
         </div>
+      </div>
+    </div>
+  );
+};
+
+const TrajectoryModal = ({ trajectory, total, budget, itemHistory, onAdd, onRemove, onUpdateQty, onClear, onClose }) => {
+  const budgetPct = budget > 0 ? (total / budget) * 100 : 0;
+
+  return (
+    <div className="qr-overlay" onClick={onClose}>
+      <div className="trajectory-popup" onClick={e => e.stopPropagation()}>
+        <div className="trajectory-header">
+          <h3>Trajectory</h3>
+          {trajectory.length > 0 && (
+            <button className="trajectory-clear-btn" onClick={onClear}>Clear</button>
+          )}
+        </div>
+
+        <ItemInputForm itemHistory={itemHistory} onSubmit={onAdd} submitLabel="Plan Item" />
+
+        {trajectory.length === 0 ? (
+          <div className="trajectory-empty">
+            <p>Plan items here to save for later.</p>
+            <p>They stay put — come back anytime to adjust.</p>
+          </div>
+        ) : (
+          <div className="trajectory-list">
+            {trajectory.map(item => (
+              <div key={item.id} className="trajectory-item selected">
+                <div className="trajectory-item-info">
+                  <span className="trajectory-item-name">{item.name}</span>
+                  <span className="trajectory-item-price">₱{item.unitPrice.toFixed(2)}</span>
+                </div>
+                <div className="trajectory-stepper">
+                  <button
+                    type="button"
+                    onClick={() => onUpdateQty(item.id, item.quantity - 1)}
+                    disabled={item.quantity <= 1}
+                    aria-label={`Decrease ${item.name}`}
+                  >−</button>
+                  <span className="trajectory-qty">{item.quantity}</span>
+                  <button
+                    type="button"
+                    onClick={() => onUpdateQty(item.id, item.quantity + 1)}
+                    aria-label={`Increase ${item.name}`}
+                  >+</button>
+                </div>
+                <button
+                  type="button"
+                  className="trajectory-remove-btn"
+                  onClick={() => onRemove(item.id)}
+                  aria-label={`Remove ${item.name}`}
+                >
+                  <FiTrash2 />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {trajectory.length > 0 && (
+          <div className="trajectory-summary">
+            <div className="trajectory-total-row">
+              <span className="trajectory-total-label">Projected total</span>
+              <span className="trajectory-total-value">₱{total.toFixed(2)}</span>
+            </div>
+            {budget > 0 && (
+              <div className={`trajectory-budget-row ${total > budget ? 'over' : ''}`}>
+                <span>
+                  {total > budget
+                    ? `Over by ₱${(total - budget).toFixed(2)}`
+                    : `₱${(budget - total).toFixed(2)} under budget`}
+                </span>
+                <span>{budgetPct.toFixed(0)}% of ₱{budget.toFixed(2)}</span>
+              </div>
+            )}
+          </div>
+        )}
+
+        <button className="qr-close" onClick={onClose}>Close</button>
       </div>
     </div>
   );
