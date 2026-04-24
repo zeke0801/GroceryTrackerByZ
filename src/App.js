@@ -3,7 +3,6 @@ import './App.css';
 import { FiMoon, FiSun, FiTrash2, FiDownload } from 'react-icons/fi';
 import { jsPDF } from 'jspdf';
 import { QRCodeSVG } from 'qrcode.react';
-import { MdRefresh } from 'react-icons/md';
 
 function App() {
   const [darkMode, setDarkMode] = React.useState(
@@ -36,10 +35,6 @@ function App() {
       date: new Date().toLocaleDateString()
     };
     setExpenses([...expenses, newExpense]);
-  };
-
-  const deleteExpense = (id) => {
-    setExpenses(expenses.filter(expense => expense.id !== id));
   };
 
   const handleDeleteClick = (id) => {
@@ -90,12 +85,6 @@ function App() {
     document.documentElement.style.backgroundColor = darkMode ? '#000000' : '#ffffff';
     document.body.className = darkMode ? 'dark' : 'light';
   }, [darkMode]);
-
-  React.useEffect(() => {
-    // Set initial background color
-    document.documentElement.style.backgroundColor = darkMode ? '#000000' : '#ffffff';
-    document.body.className = darkMode ? 'dark' : 'light';
-  }, []); // Run once on mount
 
   return (
     <div className={`App ${darkMode ? 'dark' : 'light'}`}>
